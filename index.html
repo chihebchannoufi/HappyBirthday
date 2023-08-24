@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>What is this ?</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: black;
+      position: relative; /* To make the fireworks canvas and the text relative to the body */
+    }
+    #myCanvas {
+      display: block;
+      margin: 0 auto;
+      position: absolute; /* To place the fireworks canvas in the center of the body */
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+    #clickMeLink {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 24px;
+      padding: 10px 20px;
+      border: 2px solid #000;
+      border-radius: 10px;
+      text-decoration: none;
+      color: black;
+      background-color: white;
+    }
+    #happyBirthdayText {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 48px;
+      font-weight: bold;
+      color: #fff;
+      text-align: center;
+      display: none; /* Initially hide the text until the fireworks animation starts */
+    }
+  </style>
+</head>
+<body>
+  <audio id="birthdayAudio" src="song/HB.m4a" preload="auto"></audio>
+  <canvas id="myCanvas" width="800" height="800"></canvas>
+  <a href="#" id="clickMeLink">Click Me</a>
+  <div id="happyBirthdayText">Happy Birthday!(ma3andk ma ta3ml tclicki ala flsa ?)</div>
+  <script>
+    const max_fireworks = 5,
+      max_sparks = 50;
+    let canvas = document.getElementById('myCanvas');
+    let context = canvas.getContext('2d');
+    let fireworks = [];
+
+    for (let i = 0; i < max_fireworks; i++) {
+      let firework = {
+        sparks: []
+      };
+      for (let n = 0; n < max_sparks; n++) {
+        let spark = {
+          vx: Math.random() * 5 + .5,
+          vy: Math.random() * 5 + .5,
+          weight: Math.random() * .3 + .03,
+          red: Math.floor(Math.random() * 2),
+          green: Math.floor(Math.random() * 2),
+          blue: Math.floor(Math.random() * 2)
+        };
+        if (Math.random() > .5) spark.vx = -spark.vx;
+        if (Math.random() > .5) spark.vy = -spark.vy;
+        firework.sparks.push(spark);
+      }
+      fireworks.push(firework);
+      resetFirework(firework);
+    }
+    window.requestAnimationFrame(explode);
+
+    let clickCount = 0;
+    let showFirecrackers = false;
+    const x = getRandomInt(4, 9); // Random number between 4 and 9 (inclusive)
+
+    function resetFirework(firework) {
+      firework.x = Math.floor(Math.random() * canvas.width);
+      firework.y = canvas.height;
+      firework.age = 0;
+      firework.phase = 'fly';
+    }
+
+    function explode() {
+      if (showFirecrackers) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        fireworks.forEach((firework,index) => {
+          if (firework.phase == 'explode') {
+            firework.sparks.forEach((spark) => {
+              for (let i = 0; i < 10; i++) {
+                let trailAge = firework.age + i;
+                let x = firework.x + spark.vx * trailAge;
+                let y = firework.y + spark.vy * trailAge + spark.weight * trailAge * spark.weight * trailAge;
+                let fade = i * 20 - firework.age * 2;
+                let r = Math.floor(spark.red * fade);
+                let g = Math.floor(spark.green * fade);
+                let b = Math.floor(spark.blue * fade);
+                context.beginPath();
+                context.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',1)';
+                context.rect(x, y, 4, 4);
+                context.fill();
+              }
+            });
+            firework.age++;
+            if (firework.age > 100 && Math.random() < .05) {
+              resetFirework(firework);
+            }
+          } else {
+            firework.y = firework.y - 10;
+            for (let spark = 0; spark < 15; spark++) {
+              context.beginPath();
+              context.fillStyle = 'rgba(' + index * 50 + ',' + spark * 17 + ',0,1)';
+              context.rect(firework.x + Math.random() * spark - spark / 2, firework.y + spark * 4, 4, 4);
+              context.fill();
+            }
+            if (Math.random() < .001 || firework.y < 200) firework.phase = 'explode';
+          }
+        });
+      }
+      window.requestAnimationFrame(explode);
+    }
+
+    function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
+    const clickMeLink = document.getElementById('clickMeLink');
+    clickMeLink.addEventListener('click', () => {
+      clickCount++;
+      // Move the link to a random position within the body
+      const bodyWidth = document.body.clientWidth;
+      const bodyHeight = document.body.clientHeight;
+      const randomX = Math.floor(Math.random() * (bodyWidth - 200));
+      const randomY = Math.floor(Math.random() * (bodyHeight - 50));
+      clickMeLink.style.left = `${randomX}px`;
+      clickMeLink.style.top = `${randomY}px`;
+      if (clickCount === x) {
+        // Trigger fireworks animation and show the "Happy Birthday" text
+        showFirecrackers = true;
+        document.getElementById('happyBirthdayText').style.display = 'block';
+        clickMeLink.style.display = 'none'; // Hide the "Click Me" button
+        clickCount = 0; // Reset click count after showing the message
+      }
+    });
+
+
+    const birthdayAudio = document.getElementById('birthdayAudio');
+
+// ...
+
+clickMeLink.addEventListener('click', () => {
+  clickCount++;
+  // Move the link to a random position within the body
+  const bodyWidth = document.body.clientWidth;
+  const bodyHeight = document.body.clientHeight;
+  const randomX = Math.floor(Math.random() * (bodyWidth - 200));
+  const randomY = Math.floor(Math.random() * (bodyHeight - 50));
+  clickMeLink.style.left = `${randomX}px`;
+  clickMeLink.style.top = `${randomY}px`;
+  if (clickCount === x) {
+    // Trigger fireworks animation and show the "Happy Birthday" text
+    showFirecrackers = true;
+    document.getElementById('happyBirthdayText').style.display = 'block';
+    clickMeLink.style.display = 'none'; // Hide the "Click Me" button
+    clickCount = 0; // Reset click count after showing the message
+
+    // Commencez à jouer la musique
+    birthdayAudio.play();
+  }
+});
+  </script>
+</body>
+</html>
