@@ -49,9 +49,10 @@
   </style>
 </head>
 <body>
-  <audio id="birthdayAudio" src="song/HB.m4a" preload="auto"></audio>
+  
   <canvas id="myCanvas" width="800" height="800"></canvas>
   <a href="#" id="clickMeLink">Click Me</a>
+  <audio id="birthdayAudio" src="song/HB.m4a" preload="auto"></audio>
   <div id="happyBirthdayText">Happy Birthday!(ma3andk ma ta3ml tclicki ala flsa ?)</div>
   <script>
     const max_fireworks = 5,
@@ -156,9 +157,28 @@
     });
 
 
-    
+    clickMeLink.addEventListener('click', () => {
+  clickCount++;
+  // Move the link to a random position within the body
+  const bodyWidth = document.body.clientWidth;
+  const bodyHeight = document.body.clientHeight;
+  const randomX = Math.floor(Math.random() * (bodyWidth - 200));
+  const randomY = Math.floor(Math.random() * (bodyHeight - 50));
+  clickMeLink.style.left = `${randomX}px`;
+  clickMeLink.style.top = `${randomY}px`;
+  if (clickCount === x) {
+    // Play the birthday audio
+    if (birthdayAudio.paused) {
+      birthdayAudio.play();
+    }
+
+    // Hide the "Click Me" button and show the "Happy Birthday!" text
+    clickMeLink.style.display = 'none';
+    document.getElementById('happyBirthdayText').style.display = 'block';
   }
 });
+
+
   </script>
 </body>
 </html>
