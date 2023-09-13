@@ -156,28 +156,7 @@
     });
 
 
-    const birthdayAudio = document.getElementById('birthdayAudio');
-
-// ...
-
-clickMeLink.addEventListener('click', () => {
-  clickCount++;
-  // Move the link to a random position within the body
-  const bodyWidth = document.body.clientWidth;
-  const bodyHeight = document.body.clientHeight;
-  const randomX = Math.floor(Math.random() * (bodyWidth - 200));
-  const randomY = Math.floor(Math.random() * (bodyHeight - 50));
-  clickMeLink.style.left = `${randomX}px`;
-  clickMeLink.style.top = `${randomY}px`;
-  if (clickCount === x) {
-    // Trigger fireworks animation and show the "Happy Birthday" text
-    showFirecrackers = true;
-    document.getElementById('happyBirthdayText').style.display = 'block';
-    clickMeLink.style.display = 'none'; // Hide the "Click Me" button
-    clickCount = 0; // Reset click count after showing the message
-
-    // Commencez à jouer la musique
-    birthdayAudio.play();
+    
   }
 });
   </script>
